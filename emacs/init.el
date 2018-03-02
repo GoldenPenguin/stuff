@@ -1,3 +1,5 @@
+;;; Heavily inspired by uncle dave's emacs config : https://github.com/daedreth/UncleDavesEmacs
+
 ;;; This is all kind of necessary
 (require 'package)
 (setq package-enable-at-startup nil)
