@@ -1,0 +1,65 @@
+* An org file is a structured text file interpreted in emacs using the org plugin to display a tree like structure
+* This structure can be expanded or collapsed using some simple commands. Use TAB for example...
+** TAB (org-cycle) : toggle a node or subtree
+** S-TAB (org-global-cycle) : toggle all nodes
+** C-u C-u TAB (org-set-startup-visibility) : revert to the startup visibility
+** C-u C-u C-u TAB (outline-show-all) : expand all nodes, including drawers.
+** C-c C-r (org-reveal) : reveal the context around a node.
+** C-u C-k (outline-show-branches) :
+** C-c TAB (outline-show-children) : expose all direct children of the subtree, a numeric argument will expose to the Nth depth
+** C-c C-x b (org-tree-to-indirect-buffer) : show a subtree in an indirect buffer
+** C-c C-x v (org-copy-visible) : copy the _visible_ text into the kill ring
+* Startup visibility can be parameterized
+** using the variable org-startup-folded
+** using the following lines anywhere in the buffer
+*** #+STARTUP: overview
+*** #+STARTUP: Gestion des notescontent
+*** #+STARTUP: showall
+*** #+STARTUP: showeverything
+* Since it is interpreted, it is possible to edit something invisible
+** Setting org-catch-invisible-edits to a non nil value will help prevent this
+* Some commands exists to navigate around using headers
+** C-c C-n (org-next-visible-heading) : Next heading.
+** C-c C-p (org-previous-visible-heading) : Previous heading.
+** C-c C-f (org-forward-same-level) : Next heading same level.
+** C-c C-b (org-backward-same-level) : Previous heading same level.
+** C-c C-u (outline-up-heading) : Backward to higher level heading.
+** C-c C-j (org-goto) : Jump to a different place without changing the current outline visibility.
+* Some command exists to perform structured editing, changing the text file accordingly
+** M-RET (org-meta-return) : inserts a new heading, item or row
+** C-u M-RET inserts a heading a the end of the subtree
+** C-u C-u M-RET inserts a heading a the end of the parent subtree
+** C-RET (org-insert-heading-respect-content) : insert a new heading at the end of the current subtree
+** M-S-RET (org-insert-todo-heading) : inserts a new todo entry
+** C-S-RET (org-insert-todo-heading-respect-content) : inserts a new todo entry
+** TAB (org-cycle) : on a new entry with no text, will demote/promote the entry relative to its parent
+** M-left (org-do-promote) : promote entry
+** M-right (org-do-demote) : demote the entry
+** M-S-left (org-promote-subtree) : promote the subtree
+** M-S-right (org-demote-subtree) : demote the subtree
+** M-up (org-move-subtree-up) : move the subtree up, swaping position with the previous of same level
+** M-down (org-move-subtree-down) : move the subtree down, swaping position with the next of same level
+** M-h (org-mark-element) : mark element at point, or add next element to marked elements. used for editing.
+** C-c @ (org-mark-subtree) : mark the subtree at point
+** C-c C-x C-w (org-cut-subtree) : Kill subtree, or with numeric prefix N sequential subtrees. 
+** C-c C-x M-w (org-copy-subtree) : Copy subtree to kill ring, or with numeric prefix copy the N sequential subtrees. 
+** C-c C-x C-y (org-paste-subtree) : Yank subtree from kill ring. This does modify the level of the subtree to make sure the tree fits in nicely at the yank position. 
+** C-y (org-yank) :  Depending on the options org-yank-adjusted-subtrees and org-yank-folded-subtrees, Org’s internal yank command will paste subtrees folded and in a clever way, using the same command as C-c C-x C-y. 
+** C-c C-x c (org-clone-subtree-with-time-shift) : Clone a subtree by making a number of sibling copies of it. You will be prompted for the number of copies to make, and you can also specify if any timestamps in the entry should be shifted. This can be useful, for example, to create a number of tasks related to a series of lectures to prepare. For more details, see the docstring of the command org-clone-subtree-with-time-shift. 
+** C-c C-w (org-refile) : Refile entry or region to a different location. See Refile and copy.
+** C-c ^ (org-sort) : sort same level entries
+** C-x n s (org-narrow-to-subtree) : Narrow buffer to current subtree
+** C-x n b (org-narrow-to-block) : Narrow buffer to current block
+** C-x n w (widen) : widen buffer to remove narrowing
+** C-c * (org-toggle-heading) : toggle a normal line to a heading and vice versa
+* Org mode also has the ability to construct sparse trees matching selected informations
+** Different commands exists
+*** C-c / (org-sparse-tree) : prompts for an extra key to select a sparse tree creating command
+*** C-c / r OR C-c / / (org-occur) : prompts for a regexp and show a sparse tree with all matches
+*** M-g n OR M-g M-n (next-error) : jump to the next sparse tree match
+*** M-g p OR M-g M-p (previous-error) : jump to the prevuous sparse tree match
+*** The option org-agenda-custom-commands can be used to define shortcut commands to frequently used sparse tree command
+**** For example    (setq org-agenda-custom-commands '(("f" occur-tree "FIXME")))    will bind C-c a f to creating a sparse tree matching the string FIXME
+** A sparse tree can be printed
+*** The command ps-print-buffer-with-faces will print only the visible parts of the document
+*** The command C-c C-e C-v exports only the visible part of the document and prints the resulting file.
