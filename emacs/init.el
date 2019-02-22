@@ -13,6 +13,9 @@
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
 
+;;; Set whitespace mode on programming files
+(add-hook 'prog-mode-hook 'whitespace-mode)
+
 ;;; Highligh current line
 (global-hl-line-mode t)
 
@@ -37,8 +40,8 @@
 ;;; Change yes-or-no questions to y-or-n questions? (answer yes or no)
 (defalias 'yes-or-no-p 'y-or-n-p)
 
-;;; Set line numbers
-(global-linum-mode t)
+;;; Set line numbers for programming files (it does not work well in org mode, don't need it elsewhere I think)
+(add-hook 'prog-mode-hook 'linum-mode)
 
 ;;; I'm editing code most of the time, do not wrap lines
 (setq-default truncate-lines 1)
@@ -66,6 +69,41 @@
 
 ;;; Slowness related to unicode character should be solved by this workaround
 (setq inhibit-compacting-font-caches t)
+
+;;;;;;;;;;;;;;;
+;;; iBuffer ;;;
+;;;;;;;;;;;;;;;
+
+;;; borrowed from good'ol Mike Zamansky
+(global-set-key (kbd "C-x C-b") 'ibuffer)
+;(setq ibuffer-saved-filter-groups
+;      (quote (("DEFAULT"
+;               ("dired" (mode . dired-mode))
+;               ("magit" (mode . magit-mode))
+;               ("programming" (or
+;                               (mode . clojure-mode)
+;                               (mode . clojurescript-mode)
+;                               (mode . python-mode)
+;                               (mode . c++-mode)))
+;			  ("ORG"
+;               ("org" (name . "^.*org$")))
+;			  ("TEMPORARY"
+;               ("emacs" (or (name . "^\\*.*\\*$"))))
+;               ))))
+;
+;(add-hook 'ibuffer-mode-hook
+;          (lambda ()
+;            (ibuffer-auto-mode 1)
+;            (ibuffer-switch-to-saved-filter-groups "default")))
+
+;; don't show these
+;(add-to-list 'ibuffer-never-show-predicates "zowie")
+
+;; Don't show filter groups if there are no buffers in that group
+;(setq ibuffer-show-empty-filter-groups nil)
+
+;; Don't ask for confirmation to delete marked buffers
+(setq ibuffer-expert t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Windows configuration ;;;
@@ -108,9 +146,18 @@
   :defer t)
 
 (use-package srcery-theme
-  :ensure t
-  :init
-  (progn (load-theme 'srcery 'no-confirm)))
+  :ensure t)
+
+(use-package madhat2r-theme
+  :ensure t)
+
+(use-package zenburn-theme
+  :ensure t)
+
+(use-package hc-zenburn-theme
+  :ensure t)
+
+(load-theme 'srcery 'no-confirm)
 
 ;;; Also use spaceline from spacemac's theme
 (use-package spaceline
@@ -125,6 +172,13 @@
   (spaceline-helm-mode)
   (powerline-reset))
 
+(use-package org-bullets
+  :ensure t
+  :init
+  (setq org-bullets-bullet-list '("♠" "♣" "♥" "♦" "♤" "♧" "♡" "♢"))
+  :config
+  (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+
 ;;;;;;;;;;;;;;;;;
 ;;; Utilities ;;;
 ;;;;;;;;;;;;;;;;;
@@ -134,6 +188,12 @@
   :ensure t
   :config
   (which-key-mode))
+
+;;; Golden ratio : God's invisible hand, now in the realm of emacs
+(use-package golden-ratio
+  :ensure t
+  :config
+  (golden-ratio-mode))
 
 ;;; Front-end for ag, the silver searcher
 (use-package ag
@@ -166,12 +226,17 @@
   ("M-y" . 'helm-show-kill-ring)
   ("C-x b" . 'helm-mini)
   ("C-," . 'helm-mini)
-  ("C-x C-b" . 'helm-buffers-list)
+;  ("C-x C-b" . 'helm-buffers-list)
   ("C-x C-m" . 'helm-M-x)
   ("C-x C-f" . 'helm-find-files)
   ("C-x C-r" . 'helm-recentf)
-  ("C-x r l" . 'helm-filtered-bookmarks)
-  ("M-s /" . 'helm-multi-swoop))
+  ("C-x r l" . 'helm-filtered-bookmarks))
+;  ("M-s /" . 'helm-multi-swoop))
+
+(use-package helm-ag
+  :ensure t
+  :bind
+  ("M-s" . 'helm-do-ag))
 
 ;;; Integrate Helm and Projectile
 (use-package helm-projectile
@@ -237,4 +302,5 @@
     ("C-<down>" shrink-window-horizontally)
     ("M-<up>" enlarge-window)
     ("M-<down>" shrink-window)
-    ("=" balance-windows :exit t)))
+    ("=" balance-windows :exit t))
+  )
