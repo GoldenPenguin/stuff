@@ -1,79 +1,93 @@
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; Configurations which do not require packages ;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;;; Set the default font to Hack *puts sunglasses and hoddie*
+* Configurations which do not require packages
+** Set font : Hack (puts sunglasses and hoddie)
+#+BEGIN_SRC emacs-lisp
 (add-to-list 'default-frame-alist '(font . "Hack") '(height . 105))
-;(set-face-attribute 'default nil :font "Hack" :height 105)
-;(set-frame-font "Hack" nil t)
-
-;;; Remove start page, empty scratch buffer, remove tool bar and scroll bar
+#+END_SRC
+** Remove Startup clutter
+#+BEGIN_SRC emacs-lisp
 (setq inhibit-startup-message t)
 (setq initial-scratch-message "")
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
-
-;;; Set whitespace mode on programming files
+#+END_SRC
+** Set whitespace mode on programming files
+#+BEGIN_SRC emacs-lisp
 (add-hook 'prog-mode-hook 'whitespace-mode)
-
-;;; Highligh current line
+#+END_SRC
+** Highligh current line
+#+BEGIN_SRC emacs-lisp
 (global-hl-line-mode t)
-
-;;; Set cursor shape
-(set-default 'cursor-type 'hollow)
-
+#+END_SRC
+** Set cursor shape
+#+BEGIN_SRC emacs-lisp
+(set-default 'cursor-type 'bar)
+(set-default 'cursor-in-non-selected-windows 'hollow)
+#+END_SRC
+** Scrolling behavior
+#+BEGIN_SRC emacs-lisp
 ;;; Scroll line per line instead of jumping half screen and recenter on point
 (setq scroll-conservatively 101)
-
 ;;; When using page up/down, bring the point to the top/bottom when reaching the extremities of the document
 (setq-default scroll-error-top-bottom t)
-
+#+END_SRC
+** Remap ESC to "C-g"
+#+BEGIN_SRC emacs-lisp
 ;;; ESC is just too easy to hit to quit things. Vim does it better, but shhh, we would not want someone to hear that.
 (define-key key-translation-map (kbd "ESC") (kbd "C-g"))
-
-;;; btw PLEASE use utf-8 for things
+#+END_SRC
+** PLEASE use utf-8 for things
+#+BEGIN_SRC emacs-lisp
 (prefer-coding-system 'utf-8)
-
-;;; Replace selected text when typing something
+#+END_SRC
+** Replace selected text when typing something
+#+BEGIN_SRC emacs-lisp
 (delete-selection-mode t)
-
-;;; Change yes-or-no questions to y-or-n questions? (answer yes or no)
+#+END_SRC
+** Change yes-or-no questions to y-or-n questions? (answer yes or no)
+#+BEGIN_SRC emacs-lisp
 (defalias 'yes-or-no-p 'y-or-n-p)
-
-;;; Set line numbers for programming files (it does not work well in org mode, don't need it elsewhere I think)
-(add-hook 'prog-mode-hook 'linum-mode)
-
-;;; I'm editing code most of the time, do not wrap lines
+#+END_SRC
+** Set line numbers for programming files
+#+BEGIN_SRC emacs-lisp
+(add-hook 'prog-mode-hook 'display-line-numbers-mode)
+#+END_SRC
+** I'm editing code most of the time, do not wrap lines
+#+BEGIN_SRC emacs-lisp
 (setq-default truncate-lines 1)
-
-;;; Just put backup files somewhere less distracting
+#+END_SRC
+** Just put backup files somewhere less distracting
+#+BEGIN_SRC emacs-lisp
 (setq backup-directory-alist `(("." . ,(concat user-emacs-directory ".emacs_saves/"))))
-
-;;; Also prevent the creation of lock files since I don't want to lock myself (esp. on windows)
+#+END_SRC
+** Also prevent the creation of lock files since I don't want to lock myself (esp. on windows)
+#+BEGIN_SRC emacs-lisp
 (setq create-lockfiles nil)
-
-;;; Reload files changed on disk automatically
+#+END_SRC
+** Reload files changed on disk automatically
+#+BEGIN_SRC emacs-lisp
 (global-auto-revert-mode 1)
-
-;;; Set org-mode ellipsis to something more obvious
+#+END_SRC
+** Set org-mode ellipsis to something more obvious
+#+BEGIN_SRC emacs-lisp
 (setq org-ellipsis " ~~>")
-
-;;; We are not in a terminal, and C-z is too much muscle memory at this point to learn it as "suspend emacs"
+#+END_SRC
+** Remap "C-z" to undo : We are not in a terminal, and C-z is too much muscle memory at this point to learn it as "suspend emacs"
+#+BEGIN_SRC emacs-lisp
 (global-set-key (kbd "C-z") 'undo)
-
-;;; Set tab size to something tolerable
-(setq tab-width 4)
-(setq default-tab-width 4)
+#+END_SRC
+** Tab-width 4 master race
+#+BEGIN_SRC emacs-lisp
+(setq-default tab-width 4)
+(setq-default default-tab-width 4)
 (defvaralias 'c-basic-offset 'tab-width)
 (defvaralias 'cperl-indent-level 'tab-width)
-
-;;; Slowness related to unicode character should be solved by this workaround
+#+END_SRC
+** Slowness related to unicode character should be solved by this workaround
+#+BEGIN_SRC emacs-lisp
 (setq inhibit-compacting-font-caches t)
-
-;;;;;;;;;;;;;;;
-;;; iBuffer ;;;
-;;;;;;;;;;;;;;;
-
+#+END_SRC
+** iBuffer
+#+BEGIN_SRC emacs-lisp
 ;;; borrowed from good'ol Mike Zamansky
 (global-set-key (kbd "C-x C-b") 'ibuffer)
 ;(setq ibuffer-saved-filter-groups
@@ -104,38 +118,20 @@
 
 ;; Don't ask for confirmation to delete marked buffers
 (setq ibuffer-expert t)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; Windows configuration ;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;;; On windows, we would like to change the default shell
+#+END_SRC
+** Windows configuration
+#+BEGIN_SRC emacs-lisp
 (setq explicit-shell-file-name "C:/Program Files/Git/bin/bash.exe")
 (setq shell-file-name explicit-shell-file-name)
 (add-to-list 'exec-path "C:/Program Files (x86)/Git/bin")
 ;;(setq explicit-shell-file-name "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe")
 ;;(setq shell-file-name explicit-shell-file-name)
 ;;(add-to-list 'exec-path "C:\Windows\System32\WindowsPowerShell\v1.0\")
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; Configurations which do require packages ;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;;; Set Melpa as an additionnal package repository
-(require 'package)
-(setq package-enable-at-startup nil)
-(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
-(package-initialize)
-
-;;; Bootstrapping use-package
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; Theme and apperance ;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
+#+END_SRC
+* Configurations which do require packages
+** Theme and apperance
+*** Themes
+#+BEGIN_SRC emacs-lisp
 ;;; install/update theme-related packages
 (use-package spacemacs-theme
   :ensure t
@@ -146,19 +142,25 @@
   :defer t)
 
 (use-package srcery-theme
-  :ensure t)
+  :ensure t
+  :defer t)
 
 (use-package madhat2r-theme
-  :ensure t)
+  :ensure t
+  :defer t)
 
 (use-package zenburn-theme
-  :ensure t)
+  :ensure t
+  :defer t)
 
 (use-package hc-zenburn-theme
-  :ensure t)
+  :ensure t
+  :defer t)
 
 (load-theme 'srcery 'no-confirm)
-
+#+END_SRC
+*** Spaceline
+#+BEGIN_SRC emacs-lisp
 ;;; Also use spaceline from spacemac's theme
 (use-package spaceline
   :ensure t
@@ -171,35 +173,47 @@
   (spaceline-emacs-theme)
   (spaceline-helm-mode)
   (powerline-reset))
-
+#+END_SRC
+*** Org-bullets
+#+BEGIN_SRC emacs-lisp
 (use-package org-bullets
   :ensure t
   :init
   (setq org-bullets-bullet-list '("♠" "♣" "♥" "♦" "♤" "♧" "♡" "♢"))
   :config
   (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
-
-;;;;;;;;;;;;;;;;;
-;;; Utilities ;;;
-;;;;;;;;;;;;;;;;;
-
-;;; Show completion on key chords
+#+END_SRC
+** Utilities
+*** Ace-window
+#+BEGIN_SRC emacs-lisp
+(use-package ace-window
+  :ensure t
+  :bind
+  ("C-x o" . 'ace-window))
+#+END_SRC
+*** Which-key : Show completion on key chords
+#+BEGIN_SRC emacs-lisp
 (use-package which-key
   :ensure t
   :config
   (which-key-mode))
-
-;;; Golden ratio : God's invisible hand, now in the realm of emacs
+#+END_SRC
+*** Golden ratio : God's invisible hand, now in the realm of emacs
+#+BEGIN_SRC emacs-lisp
 (use-package golden-ratio
   :ensure t
   :config
-  (golden-ratio-mode))
+  (golden-ratio-mode)
+  (add-to-list 'golden-ratio-extra-commands 'ace-window))
 
-;;; Front-end for ag, the silver searcher
+#+END_SRC
+*** Ag
+#+BEGIN_SRC emacs-lisp
 (use-package ag
   :ensure t)
-
-;;; Projectile
+#+END_SRC
+*** Projectile
+#+BEGIN_SRC emacs-lisp
 (use-package projectile
   :ensure t
   :config
@@ -210,8 +224,14 @@
   :bind
   ("s-p" . 'projectile-command-map)
   ("C-c p" . 'projectile-command-map))
-
-;;; Helm
+#+END_SRC
+*** Rainbow-mode
+#+BEGIN_SRC emacs-lisp
+(use-package rainbow-mode
+  :ensure t)
+#+END_SRC
+*** Helm
+#+BEGIN_SRC emacs-lisp
 (use-package helm
   :ensure t
   :config
@@ -232,18 +252,23 @@
   ("C-x C-r" . 'helm-recentf)
   ("C-x r l" . 'helm-filtered-bookmarks))
 ;  ("M-s /" . 'helm-multi-swoop))
-
+#+END_SRC
+*** Helm-ag
+#+BEGIN_SRC emacs-lisp
 (use-package helm-ag
   :ensure t
   :bind
   ("M-s" . 'helm-do-ag))
-
-;;; Integrate Helm and Projectile
+#+END_SRC
+*** Helm-projectile
+#+BEGIN_SRC emacs-lisp
 (use-package helm-projectile
   :ensure t
   :config
   (helm-projectile-on))
-
+#+END_SRC
+*** Helm-swoop
+#+BEGIN_SRC emacs-lisp
 ;;; replace isearch with helm-swoop
 (use-package helm-swoop
   :ensure t
@@ -252,8 +277,9 @@
 	helm-swoop-pre-input-function (lambda () ""))
   :bind
   ("C-s" . 'helm-swoop))
-
-;;; Install yasnippet and configure some snippets right away
+#+END_SRC
+*** Yasnippet
+#+BEGIN_SRC emacs-lisp
 (use-package yasnippet
   :ensure t
   :config
@@ -261,12 +287,19 @@
 	:ensure t)
   (yas-reload-all)
   (add-hook 'org-mode-hook 'yas-minor-mode))
-
-;;; To display and select UTF-8 characters
+#+END_SRC
+*** Ample-regexps : Summoning tainted souls in the realm of the living, now available in lisp.
+#+BEGIN_SRC emacs-lisp
+(use-package ample-regexps
+  :ensure t)
+#+END_SRC
+*** Charmat : UTF-8 characters
+#+BEGIN_SRC emacs-lisp
 (use-package charmap
   :ensure t)
-
-;;; Better help
+#+END_SRC
+*** Helpful : better help
+#+BEGIN_SRC emacs-lisp
 (use-package helpful
   :ensure t
   :bind
@@ -275,10 +308,9 @@
   ("C-h k" . #'helpful-key)
   ("C-h F" . #'helpful-function)
   ("C-h C" . #'helpful-command))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; Language-specific modes ;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+#+END_SRC
+** Language-specific modes
+#+BEGIN_SRC emacs-lisp
 (use-package powershell
   :ensure t)
 
@@ -287,11 +319,9 @@
 
 (use-package groovy-mode
   :ensure t)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; Hydra and relateds ;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;
-
+#+END_SRC
+** Hydra
+#+BEGIN_SRC emacs-lisp
 ;;; Hydra
 (use-package hydra
   :ensure t
@@ -304,3 +334,4 @@
     ("M-<down>" shrink-window)
     ("=" balance-windows :exit t))
   )
+#+END_SRC
