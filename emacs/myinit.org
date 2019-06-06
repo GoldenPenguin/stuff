@@ -1,7 +1,7 @@
 * Configurations which do not require packages
 ** Set font : Hack (puts sunglasses and hoddie)
 #+BEGIN_SRC emacs-lisp
-(add-to-list 'default-frame-alist '(font . "Hack") '(height . 105))
+(add-to-list 'default-frame-alist '(font . "Fira Code") '(height . 105))
 #+END_SRC
 ** Remove Startup clutter
 #+BEGIN_SRC emacs-lisp
@@ -132,62 +132,50 @@
 ** Theme and apperance
 *** Themes
 #+BEGIN_SRC emacs-lisp
-;;; install/update theme-related packages
-(use-package spacemacs-theme
-  :ensure t
-  :defer t)
-
-(use-package doom-themes
-  :ensure t
-  :defer t)
-
-(use-package srcery-theme
-  :ensure t
-  :defer t)
-
-(use-package madhat2r-theme
-  :ensure t
-  :defer t)
-
-(use-package zenburn-theme
-  :ensure t
-  :defer t)
-
-(use-package hc-zenburn-theme
-  :ensure t
-  :defer t)
-
-(load-theme 'srcery 'no-confirm)
+(use-package spacemacs-theme :ensure t :defer t)
+(use-package doom-themes :ensure t :defer t)
+(use-package srcery-theme :ensure t :defer t)
+(use-package madhat2r-theme :ensure t :defer t)
+(use-package zenburn-theme :ensure t :defer t)
+(use-package hc-zenburn-theme :ensure t :defer t)
+(use-package moe-theme :ensure t :defer t)
+(use-package ample-theme :ensure t :defer t)
+(use-package zerodark-theme :ensure t :defer t)
+(load-theme 'hc-zenburn t)
 #+END_SRC
-*** Spaceline
+*** Powerline
 #+BEGIN_SRC emacs-lisp
-;;; Also use spaceline from spacemac's theme
-(use-package spaceline
+(use-package powerline
   :ensure t
   :config
-  (require 'spaceline-config)
-  (setq spaceline-buffer-encoding-abbrev-p t
-	spaceline-line-column-p t
-	spaceline-line-p t
-	powerline-default-separator 'arrow)
-  (spaceline-emacs-theme)
-  (spaceline-helm-mode)
-  (powerline-reset))
+  (powerline-default-theme)
+  (setq powerline-default-separator 'arrow))
 #+END_SRC
 *** Org-bullets
 #+BEGIN_SRC emacs-lisp
 (use-package org-bullets
   :ensure t
   :init
-  (setq org-bullets-bullet-list '("♠" "♣" "♥" "♦" "♤" "♧" "♡" "♢"))
+  (setq org-bullets-bullet-list '("♚" "♛" "♜" "♝" "♞" "♟" "♔" "♕" "♖" "♗" "♘" "♙" "♋" "♌" "♍" "♎" "♏" "♐" "♑" "♒" "♓"))
   :config
   (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
 #+END_SRC
 ** Utilities
+*** Drag-stuff
+#+BEGIN_SRC emacs-lisp
+(use-package drag-stuff
+  :ensure t
+  :config
+  (add-to-list 'drag-stuff-except-modes 'org-mode)
+  (drag-stuff-define-keys) ; <M-up>, <M-down>, <M-left>, <M-right>
+  (drag-stuff-global-mode 1))
+#+END_SRC
 *** Ace-window
 #+BEGIN_SRC emacs-lisp
 (use-package ace-window
   :ensure t
+  :config
+  (custom-set-faces '(aw-leading-char-face ((t (:foreground "red" :height 4.0 :width normal)))))
   :bind
   ("C-x o" . 'ace-window))
 #+END_SRC
@@ -205,7 +193,6 @@
   :config
   (golden-ratio-mode)
   (add-to-list 'golden-ratio-extra-commands 'ace-window))
-
 #+END_SRC
 *** Ag
 #+BEGIN_SRC emacs-lisp
@@ -246,7 +233,6 @@
   ("M-y" . 'helm-show-kill-ring)
   ("C-x b" . 'helm-mini)
   ("C-," . 'helm-mini)
-;  ("C-x C-b" . 'helm-buffers-list)
   ("C-x C-m" . 'helm-M-x)
   ("C-x C-f" . 'helm-find-files)
   ("C-x C-r" . 'helm-recentf)
@@ -269,7 +255,6 @@
 #+END_SRC
 *** Helm-swoop
 #+BEGIN_SRC emacs-lisp
-;;; replace isearch with helm-swoop
 (use-package helm-swoop
   :ensure t
   :config
@@ -288,7 +273,7 @@
   (yas-reload-all)
   (add-hook 'org-mode-hook 'yas-minor-mode))
 #+END_SRC
-*** Ample-regexps : Summoning tainted souls in the realm of the living, now available in lisp.
+*** Ample-regexps : Summoning tainted souls in the realm of the living, now available in lisp
 #+BEGIN_SRC emacs-lisp
 (use-package ample-regexps
   :ensure t)
@@ -311,14 +296,9 @@
 #+END_SRC
 ** Language-specific modes
 #+BEGIN_SRC emacs-lisp
-(use-package powershell
-  :ensure t)
-
-(use-package csharp-mode
-  :ensure t)
-
-(use-package groovy-mode
-  :ensure t)
+(use-package powershell :ensure t)
+(use-package csharp-mode :ensure t)
+(use-package groovy-mode :ensure t)
 #+END_SRC
 ** Hydra
 #+BEGIN_SRC emacs-lisp
@@ -327,11 +307,12 @@
   :ensure t
   :config
   (defhydra hydra-window-management (global-map "<f5>")
-    "Hydra for window size : mx-butterfly to enlarge a window? Not on my watch."
-    ("C-<up>" enlarge-window-horizontally)
-    ("C-<down>" shrink-window-horizontally)
-    ("M-<up>" enlarge-window)
-    ("M-<down>" shrink-window)
-    ("=" balance-windows :exit t))
-  )
+    "Hydra for window and text features"
+    ("<right>" enlarge-window-horizontally)
+    ("<left>" shrink-window-horizontally)
+    ("<up>" enlarge-window)
+    ("<down>" shrink-window)
+    ("=" balance-windows :exit t)
+    ("<next>" text-scale-decrease)
+    ("<prior>" text-scale-increase)))
 #+END_SRC
